@@ -9,24 +9,46 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    
+    
     @IBOutlet var temperatureRange: TemperatureRange!
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var temperaturePicker: UIPickerView!
+    
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    
     
     let unitConvertor = UnitConvertor()
     
     let userDefaultsLastRowKey = "defaultCalciusPickerRow"
     
+    var firstSegment = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let defaultSegment = initialSegment()
+        segmentedControl.selectedSegmentIndex = defaultSegment
+        temperaturePicker.reloadComponent(0)
+        
+        if(defaultSegment == 1) {
+            firstSegment = false
+        }
+        else {
+            firstSegment = true
+        }
+        
         temperaturePicker.delegate = self;
         let defaultPickerRow = initialPickerRow()
         temperaturePicker.selectRow(defaultPickerRow, inComponent: 0, animated: true)
         
         pickerView(temperaturePicker, didSelectRow: defaultPickerRow, inComponent: 0)
+        
+        
+        
     }
-
+    
     func initialPickerRow() -> Int {
         if let savedRow = UserDefaults.standard.object(forKey: userDefaultsLastRowKey) as? Int {
             return savedRow
@@ -35,25 +57,73 @@ class ViewController: UIViewController {
         return temperaturePicker.numberOfRows(inComponent: 0) / 2
     }
     
+    func initialSegment() -> Int {
+        if let savedSegment = UserDefaults.standard.object(forKey: "userLastSegmentKey") as? Int {
+            return savedSegment
+        }
+        return -1
+    }
+    
     func saveSelectedRow(row: Int) {
         let defaults = UserDefaults.standard
         defaults.set(row, forKey: userDefaultsLastRowKey)
         defaults.synchronize()
     }
     
-    func displayConvertedTemperatureForRow(row: Int) {
-        let celciusValue = temperatureRange.values[row]
-        temperatureLabel.text = "\(unitConvertor.degreeFarenheit(degreeCelcius: celciusValue))°F"
+    func saveSelectedSegment(index: Int) {
+        let defaults = UserDefaults.standard
+        defaults.set(index, forKey: "userLastSegmentKey")
+        defaults.synchronize()
     }
+    
+    func displayConvertedTemperatureForRow(row: Int) {
+        if(firstSegment == true){
+            let celciusValue = temperatureRange.values[row]
+            temperatureLabel.text = "\(unitConvertor.degreeFarenheit(degreeCelcius: celciusValue))°F"
+        }
+        else {
+            let fahrenheitValue = temperatureRange.values[row]
+            temperatureLabel.text = "\(unitConvertor.degreeCelcius(degreeFarenheit: fahrenheitValue))°C"
+        }
+        
+    }
+    
+    @IBAction func indexChanged(_ sender: Any) {
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            firstSegment = true
+            temperaturePicker.reloadComponent(0)
+            pickerView(temperaturePicker, didSelectRow: initialPickerRow(), inComponent: 0)
+            saveSelectedSegment(index: 0)
+            
+        case 1:
+            firstSegment = false
+            temperaturePicker.reloadComponent(0)
+            pickerView(temperaturePicker, didSelectRow: initialPickerRow(), inComponent: 0)
+            saveSelectedSegment(index: 1)
+            
+        default:
+            break
+        }
+    }
+    
 }
 
 extension ViewController: UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "\(temperatureRange.values[row])°C"
+        if(firstSegment == true) {
+            return "\(temperatureRange.values[row])°C"
+        }
+        else {
+            return "\(temperatureRange.values[row])°F"
+        }
+        
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         displayConvertedTemperatureForRow(row: row)
         saveSelectedRow(row: row)
     }
+    
+    
 }

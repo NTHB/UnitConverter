@@ -31,15 +31,28 @@
                                     <outlet property="dataSource" destination="cew-jk-ef4" id="8aY-Jg-IA7"/>
                                 </connections>
                             </pickerView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jc2-Fe-ndo">
+                                <rect key="frame" x="109" y="163" width="157" height="29"/>
+                                <segments>
+                                    <segment title="Fahrenheit"/>
+                                    <segment title="Celcius"/>
+                                </segments>
+                                <connections>
+                                    <action selector="indexChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="WDy-NA-9iD"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="jc2-Fe-ndo" firstAttribute="top" secondItem="Le9-mL-ZI1" secondAttribute="bottom" constant="8" id="1kn-Sx-vvu"/>
                             <constraint firstItem="Le9-mL-ZI1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="388-hy-f4w"/>
+                            <constraint firstItem="jc2-Fe-ndo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6yJ-xN-exB"/>
                             <constraint firstItem="Le9-mL-ZI1" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="75" id="Z46-Yh-f7K"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="segmentedControl" destination="jc2-Fe-ndo" id="Gbf-hG-jhv"/>
                         <outlet property="temperatureLabel" destination="Le9-mL-ZI1" id="x3M-Lw-gaq"/>
                         <outlet property="temperaturePicker" destination="QyH-3z-IYh" id="x0p-Jv-LUI"/>
                         <outlet property="temperatureRange" destination="cew-jk-ef4" id="CoF-qk-1i8"/>
