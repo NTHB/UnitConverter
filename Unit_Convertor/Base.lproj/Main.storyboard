@@ -34,8 +34,8 @@
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jc2-Fe-ndo">
                                 <rect key="frame" x="109" y="163" width="157" height="29"/>
                                 <segments>
-                                    <segment title="Celcius"/>
                                     <segment title="Fahrenheit"/>
+                                    <segment title="Celcius"/>
                                 </segments>
                                 <connections>
                                     <action selector="indexChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="WDy-NA-9iD"/>

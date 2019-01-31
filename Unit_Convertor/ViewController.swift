@@ -27,11 +27,26 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let defaultSegment = initialSegment()
+        segmentedControl.selectedSegmentIndex = defaultSegment
+        temperaturePicker.reloadComponent(0)
+        
+        if(defaultSegment == 1) {
+            firstSegment = false
+        }
+        else {
+            firstSegment = true
+        }
+        
         temperaturePicker.delegate = self;
         let defaultPickerRow = initialPickerRow()
         temperaturePicker.selectRow(defaultPickerRow, inComponent: 0, animated: true)
         
         pickerView(temperaturePicker, didSelectRow: defaultPickerRow, inComponent: 0)
+        
+        
+        
     }
     
     func initialPickerRow() -> Int {
@@ -42,9 +57,22 @@ class ViewController: UIViewController {
         return temperaturePicker.numberOfRows(inComponent: 0) / 2
     }
     
+    func initialSegment() -> Int {
+        if let savedSegment = UserDefaults.standard.object(forKey: "userLastSegmentKey") as? Int {
+            return savedSegment
+        }
+        return -1
+    }
+    
     func saveSelectedRow(row: Int) {
         let defaults = UserDefaults.standard
         defaults.set(row, forKey: userDefaultsLastRowKey)
+        defaults.synchronize()
+    }
+    
+    func saveSelectedSegment(index: Int) {
+        let defaults = UserDefaults.standard
+        defaults.set(index, forKey: "userLastSegmentKey")
         defaults.synchronize()
     }
     
@@ -66,11 +94,13 @@ class ViewController: UIViewController {
             firstSegment = true
             temperaturePicker.reloadComponent(0)
             pickerView(temperaturePicker, didSelectRow: initialPickerRow(), inComponent: 0)
+            saveSelectedSegment(index: 0)
             
         case 1:
             firstSegment = false
             temperaturePicker.reloadComponent(0)
             pickerView(temperaturePicker, didSelectRow: initialPickerRow(), inComponent: 0)
+            saveSelectedSegment(index: 1)
             
         default:
             break
